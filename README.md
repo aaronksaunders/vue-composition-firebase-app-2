@@ -1,7 +1,7 @@
 # vue-composition-firebase-app-2
 
 <div>
- <img src="https://raw.githubusercontent.com/aaronksaunders/vue-composition-firebase-app/master/vue-composition-firebase-app-2.png" width="90%" style="padding:10px">
+ <img src="vue-composition-firebase-app-2.png" width="90%" style="padding:10px">
 </div>
 
 ## Overview
