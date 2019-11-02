@@ -56,6 +56,13 @@ export default {
 
       // this returns all of the state information and the function from
       // the useThingsDocument
+      // 
+      // error: error if one happens
+      // documentData: the results of the query
+      // loading: if the query is loading or not
+      // createDocument : function exposed to run against collection
+      // deleteDocument : function exposed to run against collection
+      // addDocument : function exposed to run against collection
       ...thingsDocumentProps,
 
       // catch errors from both composition functions
