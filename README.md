@@ -10,11 +10,12 @@ We are going to use the new VueJS Composition API to seperate out Firebase integ
 
 We will focus in this blog post on creating a hook, composition function to query collection in a firebase firestore database.
 
-See complete blog post : **Coming Soon** follow me on dev.to
+See complete blog post : [Using Vue Composition API with Firebase: Part II](https://dev.to/aaronksaunders/using-vue-composition-api-with-firebase-part-ii-25ki) follow me on dev.to
 
 <a href="https://dev.to/aaronksaunders">
   <img src="https://d2fltix0v2e0sb.cloudfront.net/dev-badge.svg" alt="Aaron K Saunders's DEV Profile" height="30" width="30">
 </a>
+
         
 
 
