@@ -1,17 +1,21 @@
 <template>
-  <div class="hello">
-    <div v-for="item in collectionData" :key="item.id">
-      <div>
+  <div >
+    <div v-for="item in $store.state.things" :key="item.id">
+      <div class="item-wrapper">
+        <div @click="getDocument(item.id)">
+          <div>{{item.name}}</div>
+          &nbsp;{{item.createdOn.toDate()}}
+        </div>&nbsp;
         <button @click="deleteThing(item.id)">DELETE</button>
-        &nbsp;
-        <div @click="getDocument(item.id)">{{item.name}}&nbsp;{{item.createdOn}}</div>
       </div>
     </div>
     <template v-if="loading">
       <h2>Processing Request...</h2>
     </template>
     <template v-else>
-      <button @click="addThing('New Item: ' +new Date())">ADD</button>
+      <div class="button-wrapper">
+        <button @click="addThing('New Item: ' + new Date().getTime() )">ADD NEW ITEM</button>
+      </div>
     </template>
     <div>
       <h3>Active Item</h3>
@@ -36,7 +40,8 @@ export default {
    * pass in the name of the collection into the setup so
    * it can be passed on to the composition function
    */
-  setup({ collectionName }) {
+  setup({ collectionName }, { root }) {
+    // console.log(root.$store);
     let thingsCollectionProps = useThingsCollection(collectionName, {
       onMounted: false
     });
@@ -56,7 +61,7 @@ export default {
 
       // this returns all of the state information and the function from
       // the useThingsDocument
-      // 
+      //
       // error: error if one happens
       // documentData: the results of the query
       // loading: if the query is loading or not
@@ -66,37 +71,37 @@ export default {
       ...thingsDocumentProps,
 
       // catch errors from both composition functions
-      error: thingsDocumentProps.error || thingsCollectionProps
+      error: thingsDocumentProps.error || thingsCollectionProps.error
     };
   },
   methods: {
     addThing(_name) {
-      this.createDocument({ name: _name });
+      this.createDocument({ name: _name }).then(_result => {
+        this.$store.dispatch("addThing", _result);
+      });
     },
     deleteThing(_id) {
-      this.deleteDocument(_id);
+      this.deleteDocument(_id).then(_result => {
+        this.$store.dispatch("deleteThing", _result.id);
+      });
     }
   },
   mounted() {
-    this.getCollection(/*{ limit: 5 }*/);
+    this.getCollection(/*{ limit: 5 }*/).then(_results => {
+      this.$store.dispatch("loadThings", _results.data);
+    });
   }
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
+.button-wrapper {
+  padding: 10px;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+.item-wrapper {
+  padding: 4px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid lightgray;
 }
 </style>

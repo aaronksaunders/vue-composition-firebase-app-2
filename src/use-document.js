@@ -31,24 +31,28 @@ export default function(collectionName, queryOptions) {
    */
   onMounted(() => {
     queryOptions &&
-      (queryOptions.onMount && getDocument(queryOptions.documentId));
+      queryOptions.onMount &&
+      getDocument(queryOptions.documentId);
   });
 
   const deleteDocument = _documentId => {
     state.loading = true;
     state.error = null;
-    db.collection(collectionName)
+    return db
+      .collection(collectionName)
       .doc(_documentId)
       .delete()
       .then(() => {
         console.log("Document successfully deleted!");
         state.error = null;
         state.documentData = null;
+        return { id: _documentId };
       })
       .catch(error => {
         console.error("Error removing document: ", error);
         state.error = error;
         state.documentData = null;
+        return { error };
       })
       .finally(() => {
         state.loading = false;
@@ -59,7 +63,8 @@ export default function(collectionName, queryOptions) {
     state.loading = true;
     state.error = null;
 
-    db.collection(collectionName)
+    return db
+      .collection(collectionName)
       .add({
         ..._documentData,
         createdOn: firebase.firestore.FieldValue.serverTimestamp()
@@ -67,12 +72,17 @@ export default function(collectionName, queryOptions) {
       .then(docRef => {
         state.error = null;
         state.documentData.id = docRef.id;
+        return docRef.get();
+      })
+      .then(_doc => {
+        return { id: _doc.id, ..._doc.data() };
       })
       .catch(function(error) {
         // The document probably doesn't exist.
         console.error("Error createDocument: ", error);
         state.error = error;
         state.documentData = null;
+        return { error };
       })
       .finally(() => {
         state.loading = false;
@@ -86,8 +96,9 @@ export default function(collectionName, queryOptions) {
     let data = { ..._documentData };
     delete data[id];
 
-    db.collection(collectionName)
-      .doc(_documentData.id)
+    let docRef = db.collection(collectionName).doc(_documentData.id);
+
+    return docRef
       .update({
         ...data,
         updatedOn: firebase.firestore.FieldValue.serverTimestamp()
@@ -95,12 +106,17 @@ export default function(collectionName, queryOptions) {
       .then(() => {
         state.error = null;
         state.documentData = null;
+        return docRef.get();
+      })
+      .then(_doc => {
+        return { id: _doc.id, ..._doc.data() };
       })
       .catch(function(error) {
         // The document probably doesn't exist.
         console.error("Error updating document: ", error);
         state.error = error;
         state.documentData = null;
+        return { error };
       })
       .finally(() => {
         state.loading = false;

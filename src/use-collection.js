@@ -55,7 +55,7 @@ export default function(collectionName, queryOptions) {
     theQuery = limit ? theQuery.limit(limit) : theQuery;
     theQuery = orderBy ? theQuery.orderBy(orderBy) : theQuery;
 
-    theQuery
+    return theQuery
       .get()
       .then(querySnapshot => {
         querySnapshot.forEach((doc)=> {
@@ -63,10 +63,12 @@ export default function(collectionName, queryOptions) {
         });
         state.collectionData = resultArray;
         state.error = null;
+        return { data : resultArray }
       })
       .catch((error) => {
         console.log("Error getCollection: ", error);
         state.error = error;
+        return { error };
       })
       .finally(() => {
         state.loading = false;
