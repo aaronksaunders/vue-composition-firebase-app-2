@@ -1,7 +1,8 @@
 # vue-composition-firebase-app-2
 
+## This branch implements vuex integration into the application
 <div>
- <img src="vue-composition-firebase-app-2.png" width="90%" style="padding:10px">
+ <img src="vue-composition-firebase-app-2-vuex.png" width="90%" style="padding:10px">
 </div>
 
 ## Overview
