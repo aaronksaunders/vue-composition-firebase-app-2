@@ -5,6 +5,7 @@
 </div>
 
 ## Overview
+>[Note] To view the Source Code for Part III of the series, *Using Vue Composition API with Firebase & Vuex: Part III*, [click here](https://github.com/aaronksaunders/vue-composition-firebase-app-2/tree/vuex-1)
 
 We are going to use the new VueJS Composition API to seperate out Firebase integration into a VueJS Application. 
 
