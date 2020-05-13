@@ -1,4 +1,4 @@
-# vue-composition-firebase-app-2
+# PART TWO: VueJS with Composition API and Ionic Framework Components
 
 <div>
  <img src="vue-composition-firebase-app-2.png" width="90%" style="padding:10px">
