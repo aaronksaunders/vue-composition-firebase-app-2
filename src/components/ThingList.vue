@@ -1,10 +1,17 @@
 <template>
   <div class="hello">
-    <div v-for="item in collectionData" :key="item.id">
+    <div
+      v-for="item in collectionData"
+      :key="item.id"
+    >
       <div>
-        <button @click="deleteThing(item.id)">DELETE</button>
+        <button @click="deleteThing(item.id)">
+          DELETE
+        </button>
         &nbsp;
-        <div @click="getDocument(item.id)">{{ item.name }}&nbsp;{{ item.createdOn }}</div>
+        <div @click="getDocument(item.id)">
+          {{ item.name }}&nbsp;{{ item.createdOn }}
+        </div>
       </div>
     </div>
     <template v-if="loading">
@@ -16,11 +23,15 @@
         @click="error = null"
       >
         {{ error }}
-        <div style="font-size:smaller; padding-top:12px">- click to clear message</div>
+        <div style="font-size:smaller; padding-top:12px">
+          - click to clear message
+        </div>
       </div>
     </template>
     <template v-else>
-      <button @click="addThing('New Item: ' +new Date())">ADD</button>
+      <button @click="addThing('New Item: ' +new Date())">
+        ADD
+      </button>
     </template>
     <div>
       <h3>Active Item</h3>
