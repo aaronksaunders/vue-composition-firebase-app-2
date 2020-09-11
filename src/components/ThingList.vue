@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <div v-for="item in $store.state.things" :key="item.id">
       <div class="item-wrapper">
         <div @click="getDocument(item.id)">
@@ -19,7 +19,7 @@
     </template>
     <div>
       <h3>Active Item</h3>
-      {{documentData}}
+      {{$store.state.currentDocument}}
     </div>
   </div>
 </template>
@@ -42,11 +42,15 @@ export default {
    */
   setup({ collectionName }, { root }) {
     // console.log(root.$store);
-    let thingsCollectionProps = useThingsCollection(collectionName, {
-      onMounted: false
-    });
+    let thingsCollectionProps = useThingsCollection(
+      root.$store,
+      collectionName,
+      {
+        onMounted: false
+      }
+    );
 
-    let thingsDocumentProps = useThingsDocument(collectionName, {
+    let thingsDocumentProps = useThingsDocument(root.$store, collectionName, {
       onMounted: false
     });
     return {
@@ -76,19 +80,16 @@ export default {
   },
   methods: {
     addThing(_name) {
-      this.createDocument({ name: _name }).then(_result => {
-        this.$store.dispatch("addThing", _result);
-      });
+      this.createDocument({ name: _name });
     },
     deleteThing(_id) {
-      this.deleteDocument(_id).then(_result => {
-        this.$store.dispatch("deleteThing", _result.id);
-      });
+      this.deleteDocument(_id);
     }
   },
   mounted() {
-    this.getCollection(/*{ limit: 5 }*/).then(_results => {
-      this.$store.dispatch("loadThings", _results.data);
+    this.loading = true;
+    this.getCollection(/*{ limit: 5 }*/).then(() => {
+      this.loading = false;
     });
   }
 };

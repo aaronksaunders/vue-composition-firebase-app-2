@@ -10,7 +10,7 @@ import "firebase/firestore";
  * @param { boolean | undefined } queryOptions.onMounted if true run query on mount
  * @param { string | undefined } queryOptions.documentId query string, see firebase documentation
  */
-export default function(collectionName, queryOptions) {
+export default function(store, collectionName, queryOptions) {
   let state = reactive({
     // error if one happens
     error: null,
@@ -46,12 +46,17 @@ export default function(collectionName, queryOptions) {
         console.log("Document successfully deleted!");
         state.error = null;
         state.documentData = null;
+
+        // update the store
+        store.dispatch("deleteThing", _documentId);
         return { id: _documentId };
       })
       .catch(error => {
         console.error("Error removing document: ", error);
         state.error = error;
         state.documentData = null;
+        // updatet the store
+        store.dispatch("error", error);
         return { error };
       })
       .finally(() => {
@@ -75,13 +80,20 @@ export default function(collectionName, queryOptions) {
         return docRef.get();
       })
       .then(_doc => {
-        return { id: _doc.id, ..._doc.data() };
+        let document = { id: _doc.id, ..._doc.data() };
+
+        // update the store
+        store.dispatch("addThing", document);
+        return document;
       })
       .catch(function(error) {
         // The document probably doesn't exist.
         console.error("Error createDocument: ", error);
         state.error = error;
         state.documentData = null;
+
+        // updatet the store
+        store.dispatch("error", error);
         return { error };
       })
       .finally(() => {
@@ -116,6 +128,9 @@ export default function(collectionName, queryOptions) {
         console.error("Error updating document: ", error);
         state.error = error;
         state.documentData = null;
+
+        // updatet the store
+        store.dispatch("error", error);
         return { error };
       })
       .finally(() => {
@@ -133,7 +148,8 @@ export default function(collectionName, queryOptions) {
     state.loading = true;
     state.error = null;
 
-    db.collection(collectionName)
+    return db
+      .collection(collectionName)
       .doc(documentId)
       .get()
       .then(doc => {
@@ -141,16 +157,25 @@ export default function(collectionName, queryOptions) {
           console.log("Document data:", doc.data());
           state.documentData = { id: doc.id, ...doc.data() };
           state.error = null;
+
+          // updatet the store
+          store.dispatch("setCurrentThing", state.documentData);
+
+          return state.documentData;
         } else {
           // doc.data() will be undefined in this case
           console.log("No such document!: " + documentId);
           state.documentData(null);
           state.error = null;
+          return null;
         }
       })
       .catch(error => {
         console.log("Error getDocuent: ", error);
         state.error = error;
+        // updatet the store
+        store.dispatch("error", error);
+        return { error };
       })
       .finally(() => {
         state.loading = false;
