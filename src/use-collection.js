@@ -12,7 +12,7 @@ import "firebase/firestore";
  * @param { string | undefined } queryOptions.orderBy order results,  string, see firebase documentation
  * @param { number | undefined } queryOptions.limit number of object to return,  string, see firebase documentation
  */
-export default function(store, collectionName, queryOptions) {
+export default function(collectionName, queryOptions) {
   let state = reactive({
     // error if one happens
     error: null,
@@ -32,7 +32,7 @@ export default function(store, collectionName, queryOptions) {
    *
    */
   onMounted(() => {
-    queryOptions && queryOptions.onMount && getCollection();
+    queryOptions && (queryOptions.onMount && getCollection());
   });
 
   /**
@@ -58,22 +58,16 @@ export default function(store, collectionName, queryOptions) {
     return theQuery
       .get()
       .then(querySnapshot => {
-        querySnapshot.forEach(doc => {
+        querySnapshot.forEach((doc)=> {
           resultArray.push({ id: doc.id, ...doc.data() });
         });
         state.collectionData = resultArray;
         state.error = null;
-
-        // updatet the store
-        store.dispatch("loadThings", resultArray);
-        return { data: resultArray };
+        return { data : resultArray }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("Error getCollection: ", error);
         state.error = error;
-
-        // updatet the store
-        store.dispatch("error", error);
         return { error };
       })
       .finally(() => {
@@ -83,6 +77,6 @@ export default function(store, collectionName, queryOptions) {
 
   return {
     ...toRefs(state),
-    getCollection: getCollection
+    'getCollection' : getCollection
   };
 }

@@ -8,13 +8,6 @@ import "firebase/firestore";
 if (firebase.apps.length === 0) {
   const firebaseConfig = {
     /* YOUR CONFIGURATION GOES HERE */
-    apiKey: "AIzaSyAlTTdjRdmEt_UCHgqY7W4CiRNTht-Mv0M",
-    authDomain: "vueclass-106b7.firebaseapp.com",
-    databaseURL: "https://vueclass-106b7.firebaseio.com",
-    projectId: "vueclass-106b7",
-    storageBucket: "vueclass-106b7.appspot.com",
-    messagingSenderId: "800099862302",
-    appId: "1:800099862302:web:b184f740598a80c9"
   };
   firebase.initializeApp(firebaseConfig);
 }
